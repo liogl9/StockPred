@@ -1,5 +1,6 @@
 # StockPred
 
+
 Estructura de carpetas necesaria por si se descarga un modelo para ejecutar:
 
 ![Folder Structure](doc/images/FolderStructure.png)
