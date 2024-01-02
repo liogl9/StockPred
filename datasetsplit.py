@@ -9,9 +9,9 @@ def create_dataset_one_output(dataset, lookback):
         lookback: Size of window for prediction
     """
     X, y = [], []
-    for i in range(len(dataset)-lookback):
-        feature = dataset[i:i+lookback]
-        target = dataset[i+lookback:i+lookback+1]
+    for i in range(dataset.shape[0]-lookback):
+        feature = dataset[i:i+lookback,:-1]
+        target = dataset[i+lookback:i+lookback+1,-1:]
         X.append(feature)
         y.append(target)
     return torch.tensor(np.array(X)), torch.tensor(np.array(y))
@@ -39,10 +39,16 @@ def create_single_sample(dataset, lookback):
         lookback: Size of window for prediction
     """
     X, y = [], []
-    feature = dataset[0:lookback]
-    target = dataset[1:lookback]
-    X.append(feature)
-    y.append(target)
+    if dataset.shape[1] == 1:
+        feature = dataset[0:lookback]
+        target = dataset[1:lookback]
+        X.append(feature)
+        y.append(target)
+    else:
+        feature = dataset[0:lookback,:-1]
+        target = dataset[1:lookback,-1:]
+        X.append(feature)
+        y.append(target)
     return torch.tensor(np.array(X)), torch.tensor(np.array(y))
 
 def get_single_sample(dataset, lookback, pos):
@@ -53,12 +59,16 @@ def get_single_sample(dataset, lookback, pos):
         lookback: Size of window for prediction
     """
     X, y = [], []
-    
-    feature = dataset[pos:pos+lookback]
-    target = dataset[pos+1:pos+lookback+1]
-    X.append(feature)
-    y.append(target)
-        
+    if dataset.shape[1] == 1:
+        feature = dataset[pos:pos+lookback]
+        target = dataset[pos+1:pos+lookback+1]
+        X.append(feature)
+        y.append(target)
+    else:
+        feature = dataset[pos:pos+lookback,:-1]
+        target = dataset[pos+1:pos+lookback+1,-1:]
+        X.append(feature)
+        y.append(target)
     return torch.tensor(np.array(X)), torch.tensor(np.array(y))
 
 def create_testset(dataset, lookback):
